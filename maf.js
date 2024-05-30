@@ -10,7 +10,7 @@ canvas.height = H
 let stabilize = true
 let isRotationThrustOff = true
 let colorAngle = 180
-let fuel = 300
+let fuel = 3000
 const fuelCap = 6000
 
 // state variables
@@ -22,6 +22,7 @@ let rate = [0.0, 0.0]
 let position = [0.0, 0.0]
 
 const queue = CircularList(20);
+let repelForce = [0, 0]
 
 // Initialize the wormhole (circles)
 let lx, ly = null
@@ -208,6 +209,7 @@ function updateState(deltaT, elapsedT) {
         fuel = fuel - Math.abs(thrust * 100) - Math.abs(rotationThrust * 100)
         rate = [rate[0] + Math.sin(rotationAngle) * thrust,
         rate[1] + Math.cos(rotationAngle) * thrust]
+        rate = [rate[0] + repelForce[0], rate[1] + repelForce[1]]       
     }
     position = [position[0] + rate[0], position[1] + rate[1]]
     drawScene(deltaT, elapsedT);
@@ -227,12 +229,19 @@ const new_circle = () => {
     let circle = queue.nextItem()
     let radius = 180
     let points = 1
+    repelForce = [0,0]
+    const rf = 0.0008 // repulse factor
     // console.log("-----------")
     while (circle) {
         // console.log(radius)
-        if (Math.abs(position[0] + circle.x) < radius && Math.abs(position[1] + circle.y) < radius && fuel <= fuelCap) {
-            fuel = Math.min(fuel + points, fuelCap)
+        if (Math.abs(position[0] + circle.x) < radius && Math.abs(position[1] + circle.y) < radius) {
+            if (fuel <= fuelCap) {
+                fuel = Math.min(fuel + points, fuelCap)
+            }
             // console.log(points)
+            repelForce = [
+                repelForce[0] + (1/radius)*rf*(position[0] + circle.x), 
+                repelForce[1] + (1/radius)*rf*(position[1] + circle.y)]
         }
         circle = queue.nextItem()
         radius -= 9
@@ -241,6 +250,7 @@ const new_circle = () => {
     if (Math.abs(position[0] + x) < 10 && Math.abs(position[1] + y) < 10) {
         fuel += 800
     }
+
 
     lx = x
     ly = y
