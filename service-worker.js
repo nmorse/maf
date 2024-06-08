@@ -1,5 +1,6 @@
 const cacheName = "mafCache"
-const precachedResources = ["/", "/index.html", "/maf.js", "/cl.js", "https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css", "/maf.css"];
+const precachedResources = ["/", "/index.html", "/maf.js", "/cl.js", "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"];
+
 
 async function precache() {
     const cache = await caches.open(cacheName);

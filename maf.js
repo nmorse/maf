@@ -1,11 +1,14 @@
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+(() => {
+    // …
+
+const spaceCanvas = document.getElementById("spaceCanvas");
+const ctx = spaceCanvas.getContext('2d');
 const circles = [];
 const W = 800
 const H = W
 const ROT_THRUST = 0.0003
-canvas.width = W
-canvas.height = H
+spaceCanvas.width = W
+spaceCanvas.height = H
 
 let stabilize = true
 let isRotationThrustOff = true
@@ -43,8 +46,8 @@ for (let i = 0; i < 18; i++) {
 
 function drawScene(deltaT, elapsedT) {
     ctx.save();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.translate(canvas.width / 2, canvas.height / 2); // translate to center
+    ctx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+    ctx.translate(spaceCanvas.width / 2, spaceCanvas.height / 2); // translate to center
     // ship in the center of the screen 
     ctx.save()
 
@@ -53,10 +56,10 @@ function drawScene(deltaT, elapsedT) {
 
     ctx.strokeStyle = `rgb(0, 0, 250)`;
     ctx.beginPath();
-    const minW = -canvas.width + position[0]
-    const maxW = canvas.width + position[0]
-    const minH = -canvas.height + position[1]
-    const maxH = canvas.height + position[1]
+    const minW = -spaceCanvas.width + position[0]
+    const maxW = spaceCanvas.width + position[0]
+    const minH = -spaceCanvas.height + position[1]
+    const maxH = spaceCanvas.height + position[1]
     for (let x = minW; x < maxW; x += 50) {
         ctx.moveTo(x, minH);
         ctx.lineTo(x, maxH);
@@ -296,11 +299,11 @@ function handleResize() {
 
     if (viewportWidthRatio < 1.0 || viewportHeightRatio < 1.5) {
         if (viewportWidthRatio < viewportHeightRatio) {
-            //console.log("viewportWidth, Math.floor(H * viewportWidthRatio)", viewportWidth, Math.floor(canvas.height * viewportWidthRatio))
+            console.log("(viewportWidthRatio < viewportHeightRatio) viewportWidth, Math.floor(H * viewportWidthRatio)", viewportWidth, Math.floor(spaceCanvas.height * viewportWidthRatio))
             changeCanvasSize(viewportWidth, Math.floor(H * viewportWidthRatio));
         }
         else {
-            //console.log("Math.floor(W * viewportHeightRatio), viewportHeight", Math.floor(canvas.width * viewportHeightRatio), viewportHeight)
+            console.log("!(viewportWidthRatio < viewportHeightRatio) Math.floor(W * viewportHeightRatio), viewportHeight", Math.floor(spaceCanvas.width * viewportHeightRatio), viewportHeight)
             changeCanvasSize(Math.floor(W * viewportHeightRatio), viewportHeight);
         }
         drawScene();
@@ -308,10 +311,10 @@ function handleResize() {
 }
 
 function changeCanvasSize(newWidth, newHeight) {
-    var canvas = document.getElementById("canvas");
-    // Update canvas size
-    canvas.width = newWidth;
-    canvas.height = newHeight;
+    // var spaceCanvas = document.getElementById("space-spaceCanvas");
+    // Update spaceCanvas size
+    spaceCanvas.width = newWidth;
+    spaceCanvas.height = newHeight;
 }
 
 // Attach the event listener to the resize event
@@ -368,3 +371,4 @@ document.getElementById('rightArrow').addEventListener("touchstart", rotateClock
 document.getElementById('leftArrow').addEventListener("touchend", rotateThrustOff);
 document.getElementById('upArrow').addEventListener("touchend", thrustOff);
 document.getElementById('rightArrow').addEventListener("touchend", rotateThrustOff);
+})();
