@@ -131,13 +131,33 @@
         ctx.lineTo(1, 10);
 
         ctx.lineTo(6, 10);
+
+        // rotation nozzle rb
+        ctx.lineTo(10, 10);
+        ctx.lineTo(6, 10);
+        
+
         ctx.lineTo(10, 6);
         ctx.lineTo(10, -6);
+
+        // rotation nozzle rt
+        ctx.lineTo(6, -10);
+        ctx.lineTo(10, -10);
+
         ctx.lineTo(6, -10);
         ctx.lineTo(-6, -10);
-        ctx.lineTo(-10, -6);
 
+        // rotation nozzle lt
+        ctx.lineTo(-10, -10);
+        ctx.lineTo(-6, -10);
+        
+        ctx.lineTo(-10, -6);
         ctx.lineTo(-10, 6);
+
+        // rotation nozzle rt
+        ctx.lineTo(-6, 10);
+        ctx.lineTo(-10, 10);
+        
         ctx.lineTo(-6, 10);
         ctx.stroke();
         // draw the fuel level
