@@ -24,18 +24,20 @@
     <div class="bg-gray-200 p-4">
         <div class="grid grid-cols-3 gap-2">
             <!-- Buttons -->
-            <button class="bg-blue-500 h-300 text-white py-2 rounded-sm" id="leftArrow">◀</button>
-            <button class="bg-blue-500 text-white py-2 rounded-sm" id="upArrow"> ▲ </button>
-            <button class="bg-blue-500 text-white py-2 rounded-sm" id="rightArrow">▶</button>
+            <button class="bg-blue-500 h-300 text-white py-5 rounded-sm" id="leftArrow">◀</button>
+            <button class="bg-blue-500 text-white py-5 rounded-sm" id="upArrow"> ▲ </button>
+            <button class="bg-blue-500 text-white py-5 rounded-sm" id="rightArrow">▶</button>
             <label class="bg-blue-500 text-white py-2 rounded-sm">Engage Rotational Stabilization System
-                <input type="checkbox" checked onchange="setRotStabilize()" />
+                Fuel: <span id="score">????</span> <br />
+                <input type="checkbox" checked id="RotStabilize" />
             </label>
             <div class="bg-blue-500 text-white py-2 rounded-sm">
-            Fuel: <span id="score">????</span>
+            
             </div>
             <div class="bg-blue-500 text-white py-2 rounded-sm">
                 <p>Window height: <span id="height"></span></p>
                 <p>Window width: <span id="width"></span></p>
+                <button id="RESET">RESET</button>
             </div>
         </div>
     </div>

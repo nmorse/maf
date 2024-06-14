@@ -1,12 +1,20 @@
 
 function CircularList(size) {
-    const items = new Array(size);
+    let items = new Array(size);
     let headIndex = 0;
     let tailIndex = 0;
     let iterationIndex = 0;
     let length = 0;
 
     const nextIndex = (index) => (index + 1) % size;
+
+    const clear = () => {
+        items = []
+        headIndex = 0
+        tailIndex = 0
+        iterationIndex = 0
+        length = 0
+    }
 
     const enqueue = (item) => {
         if (nextIndex(tailIndex) !== headIndex) {
@@ -46,7 +54,8 @@ function CircularList(size) {
         nextItem,
         resetIterate,
         enqueue,
-        dequeue
+        dequeue,
+        clear
     };
 
 }
