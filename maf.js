@@ -273,6 +273,8 @@
         drawScene(deltaT, elapsedT);
     }
 
+    const distance = (dx, dy) => Math.sqrt(dx*dx + dy*dy)
+
     const new_circle = () => {
         queue.dequeue()
         const x = lx + (Math.random() * 100 - 50)
@@ -292,7 +294,7 @@
         // console.log("-----------")
         while (circle) {
             // console.log(radius)
-            if (Math.abs(position[0] + circle.x) < radius && Math.abs(position[1] + circle.y) < radius) {
+            if (distance(position[0] + circle.x, position[1] + circle.y) < radius) {
                 if (fuel <= fuelCap) {
                     fuel = Math.min(fuel + points, fuelCap)
                 }
@@ -305,7 +307,7 @@
             radius -= 9
             points += 1
         }
-        if (Math.abs(position[0] + x) < 10 && Math.abs(position[1] + y) < 10) {
+        if (distance(position[0] + x, position[1] + y) < 10) {
             fuel += 800
         }
 
