@@ -1,6 +1,6 @@
 (() => {
     // …
-
+    let pause = false
     const spaceCanvas = document.getElementById("spaceCanvas");
     const ctx = spaceCanvas.getContext('2d');
     const circles = [];
@@ -28,6 +28,7 @@
     let repelForce = [0, 0]
 
     const init = () => {
+        pause = false
         stabilize = true
         isRotationThrustOff = true
         colorAngle = 180
@@ -319,6 +320,7 @@
     let frames = 0
     let previousTimeStamp, start
     function animate(timeStamp) {
+        if (pause) return
         if (previousTimeStamp === undefined) {
             previousTimeStamp = timeStamp;
         }
@@ -346,8 +348,8 @@
 
     // Function to handle resize events
     function handleResize() {
-        heightOutput.textContent = window.innerHeight;
-        widthOutput.textContent = window.innerWidth;
+        // heightOutput.textContent = window.innerHeight;
+        // widthOutput.textContent = window.innerWidth;
         // Get the updated width and height of the viewport
         const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -377,6 +379,11 @@
     handleResize()
     drawScene();
     animate();
+    const togglePause = () => {
+        pause = !pause
+        document.getElementById("PAUSE").className = `p-2 ${pause ? 'bg-gray-200 text-black py-2 rounded-sm' : 'bg-blue-500 text-white py-2 rounded-sm'}`;
+        if (!pause) requestAnimationFrame(animate);
+    }
     function handleKeyDown(event) {
         if (event.keyCode === 37) {
             rotateCounterClockwiseThrustOn(event)
@@ -412,6 +419,7 @@
         window.addEventListener('resize', handleResize)
 
         document.getElementById("RESET").addEventListener("click", init)
+        document.getElementById("PAUSE").addEventListener("click", togglePause)
         document.getElementById("RotStabilize").addEventListener("change", setRotStabilize);
         document.addEventListener("keydown", handleKeyDown);
         document.addEventListener("keyup", handleKeyUp);
