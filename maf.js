@@ -66,6 +66,8 @@
 
     init()
 
+    const distance = (dx, dy) => Math.sqrt(dx*dx + dy*dy)
+
     function drawScene(deltaT, elapsedT) {
         ctx.save();
         ctx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
@@ -96,8 +98,8 @@
         ctx.translate(position[0], position[1]);
 
         // render the wormhole
-        let distance = 255 + (deltaT / 110)
-        // console.log(distance)
+        let dist = 255 + (deltaT / 110)
+        // console.log(dist)
         queue.resetIterate()
         let circle = queue.nextItem()
         ctx.globalCompositeOperation = "lighten" // "lighten" "difference"
@@ -105,16 +107,16 @@
         colorAngle %= 360
         ca = Math.floor(colorAngle)
         while (circle) {
-            if (distance <= 0) {
+            if (dist <= 0) {
                 break
             }
             ctx.beginPath();
-            ctx.arc(circle.x, circle.y, distance, 0, 2 * Math.PI);
-            ctx.fillStyle = `hsla(${ca}deg 100% 33% / ${((255 - distance) / 2.55)}%)`;
+            ctx.arc(circle.x, circle.y, dist, 0, 2 * Math.PI);
+            ctx.fillStyle = `hsla(${ca}deg 100% 33% / ${((255 - dist) / 2.55)}%)`;
             ctx.fill();
-            // ctx.strokeStyle = `rgb(${distance},${distance},${distance})`;
+            // ctx.strokeStyle = `rgb(${dist},${dist},${dist})`;
             // ctx.stroke();
-            distance -= 18
+            dist -= 18
             ca += 10
             ca = ca % 360
             circle = queue.nextItem()
@@ -193,7 +195,7 @@
 
         // heads up display
         ctx.save()
-        ctx.translate(35, spaceCanvas.height - 35)
+        ctx.translate(spaceCanvas.width/2, spaceCanvas.height - 35)
         ctx.rotate(rotationAngle);
         ctx.beginPath();
         queue.resetIterate()
@@ -201,9 +203,14 @@
         ctx.strokeStyle = `rgb(255, 20, 20)`
         while (circle) {
             ctx.moveTo(0, 0);
-            const x = position[0] + circle.x
-            const y = position[1] + circle.y
-            ctx.lineTo(Math.min(Math.max(-35, x/5), 35), Math.min(Math.max(-35, y/5), 35));
+            let x = position[0] + circle.x
+            let y = position[1] + circle.y
+            const d = distance(x, y)
+            if (d > 175) {
+                x = (x / d) * 175
+                y = (y / d) * 175
+            }
+            ctx.lineTo(x/5, y/5);
             circle = queue.nextItem()
         }
         ctx.stroke()
@@ -294,8 +301,6 @@
         position = [position[0] + rate[0], position[1] + rate[1]]
         drawScene(deltaT, elapsedT);
     }
-
-    const distance = (dx, dy) => Math.sqrt(dx*dx + dy*dy)
 
     const new_circle = () => {
         queue.dequeue()
