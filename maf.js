@@ -75,7 +75,7 @@
 
         ctx.rotate(rotationAngle); // rotate
 
-
+        // the grid
         ctx.strokeStyle = `rgb(0, 0, 250)`;
         ctx.beginPath();
         const minW = -spaceCanvas.width + position[0]
@@ -90,12 +90,12 @@
             ctx.moveTo(minW, y);
             ctx.lineTo(maxW, y);
         }
-        ctx.stroke(); // Render the path
+        ctx.stroke(); // Render the grid
 
 
         ctx.translate(position[0], position[1]);
 
-
+        // render the wormhole
         let distance = 255 + (deltaT / 110)
         // console.log(distance)
         queue.resetIterate()
@@ -136,37 +136,31 @@
         // rotation nozzle rb
         ctx.lineTo(10, 10);
         ctx.lineTo(6, 10);
-        
-
         ctx.lineTo(10, 6);
         ctx.lineTo(10, -6);
 
         // rotation nozzle rt
         ctx.lineTo(6, -10);
         ctx.lineTo(10, -10);
-
         ctx.lineTo(6, -10);
         ctx.lineTo(-6, -10);
 
         // rotation nozzle lt
         ctx.lineTo(-10, -10);
         ctx.lineTo(-6, -10);
-        
         ctx.lineTo(-10, -6);
         ctx.lineTo(-10, 6);
 
         // rotation nozzle rt
         ctx.lineTo(-6, 10);
         ctx.lineTo(-10, 10);
-        
         ctx.lineTo(-6, 10);
         ctx.stroke();
+
         // draw the fuel level
         ctx.fillStyle = `rgb(20, 255, 20)`
         ctx.strokeStyle = `rgb(20, 255, 20)`
-//        ctx.save();
         ctx.fillRect(-2, 10, 4, -fuel / fuelCap * 20);
-//        ctx.restore();
 
         if (fuel > 0) {
             const r1 = Math.random() * 0.4 + 0.8
@@ -195,6 +189,33 @@
                 ctx.stroke();
             }
         }
+        ctx.restore();
+
+        // heads up display
+        ctx.save()
+        ctx.translate(35, spaceCanvas.height - 35)
+        ctx.rotate(rotationAngle);
+        ctx.beginPath();
+        queue.resetIterate()
+        circle = queue.nextItem()
+        ctx.strokeStyle = `rgb(255, 20, 20)`
+        while (circle) {
+            ctx.moveTo(0, 0);
+            const x = position[0] + circle.x
+            const y = position[1] + circle.y
+            ctx.lineTo(Math.min(Math.max(-35, x/5), 35), Math.min(Math.max(-35, y/5), 35));
+            circle = queue.nextItem()
+        }
+        ctx.stroke()
+
+
+        ctx.strokeStyle = `rgb(250, 255, 200)`
+        ctx.beginPath();
+        ctx.arc(0, 0, 30, 0, Math.PI * 2, true)
+        ctx.strokeStyle = `rgb(250, 250, 20)`
+        ctx.moveTo(0, 0);
+        ctx.lineTo(rate[0]*-10, rate[1]*-10);
+        ctx.stroke()
         ctx.restore();
     }
 
@@ -292,14 +313,12 @@
         let points = 1
         repelForce = [0, 0]
         const rf = 0.0008 // repulse factor
-        // console.log("-----------")
         while (circle) {
             // console.log(radius)
             if (distance(position[0] + circle.x, position[1] + circle.y) < radius) {
                 if (fuel <= fuelCap) {
                     fuel = Math.min(fuel + points, fuelCap)
                 }
-                // console.log(points)
                 repelForce = [
                     repelForce[0] + (1 / radius) * rf * (position[0] + circle.x),
                     repelForce[1] + (1 / radius) * rf * (position[1] + circle.y)]
@@ -311,8 +330,6 @@
         if (distance(position[0] + x, position[1] + y) < 10) {
             fuel += 800
         }
-
-
         lx = x
         ly = y
     }
