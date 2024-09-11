@@ -58,6 +58,8 @@
             queue.enqueue({
                 x,
                 y,
+                r: 1,
+                color: ''
             });
             lx = x
             ly = y
@@ -98,8 +100,8 @@
         ctx.translate(position[0], position[1]);
 
         // render the wormhole
-        let dist = 255 + (deltaT / 110)
-        // console.log(dist)
+        let radius = 255 + (deltaT / 110)
+        // console.log(radius)
         queue.resetIterate()
         let circle = queue.nextItem()
         ctx.globalCompositeOperation = "lighten" // "lighten" "difference"
@@ -107,21 +109,22 @@
         colorAngle %= 360
         ca = Math.floor(colorAngle)
         while (circle) {
-            if (dist <= 0) {
+            if (radius <= 0) {
                 break
             }
+            circle.r = radius
+            circle.color = `hsla(${ca}deg 100% 33% / ${((255 - radius) / 2.55)}%)`
             ctx.beginPath();
-            ctx.arc(circle.x, circle.y, dist, 0, 2 * Math.PI);
-            ctx.fillStyle = `hsla(${ca}deg 100% 33% / ${((255 - dist) / 2.55)}%)`;
+            ctx.arc(circle.x, circle.y, circle.r, 0, 2 * Math.PI);
+            ctx.fillStyle = circle.color;
             ctx.fill();
-            // ctx.strokeStyle = `rgb(${dist},${dist},${dist})`;
-            // ctx.stroke();
-            dist -= 18
+            radius -= 18
             ca += 10
             ca = ca % 360
             circle = queue.nextItem()
         }
         ctx.restore();
+
         // draw the Vessel
         ctx.strokeStyle = `rgb(200, 0, 0)`;
         ctx.beginPath();
@@ -198,10 +201,14 @@
         ctx.translate(spaceCanvas.width/2, spaceCanvas.height - 35)
         ctx.rotate(rotationAngle);
         ctx.beginPath();
+        ctx.strokeStyle = `rgb(250, 255, 200)`
+        ctx.arc(0, 0, 35, 0, Math.PI * 2, true)
+        ctx.fill()
         queue.resetIterate()
         circle = queue.nextItem()
-        ctx.strokeStyle = `rgb(255, 20, 20)`
+        ctx.strokeStyle = circle.color
         while (circle) {
+            ctx.beginPath();
             ctx.moveTo(0, 0);
             let x = position[0] + circle.x
             let y = position[1] + circle.y
@@ -210,16 +217,15 @@
                 x = (x / d) * 175
                 y = (y / d) * 175
             }
+            ctx.strokeStyle = circle.color
             ctx.lineTo(x/5, y/5);
+            ctx.stroke()
             circle = queue.nextItem()
         }
-        ctx.stroke()
-
-
         ctx.strokeStyle = `rgb(250, 255, 200)`
         ctx.beginPath();
         ctx.arc(0, 0, 30, 0, Math.PI * 2, true)
-        ctx.strokeStyle = `rgb(250, 250, 20)`
+        ctx.strokeStyle = `rgb(250, 250, 200)`
         ctx.moveTo(0, 0);
         ctx.lineTo(rate[0]*-10, rate[1]*-10);
         ctx.stroke()
