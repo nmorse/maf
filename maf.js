@@ -340,6 +340,13 @@
         }
         if (distance(position[0] + x, position[1] + y) < 10) {
             fuel += 800
+            pause = true
+            document.getElementById("PAUSE").className = `p-2 ${pause ? 'bg-gray-200 text-black py-2 rounded-sm' : 'bg-blue-500 text-white py-2 rounded-sm'}`;
+            messageBox(`You have anticipated the position of the newest, smallest 
+                and most powerful circle. Due to your skilled (or lucky) ship placement,
+                800 kg of fuel has been transferred on board.
+                click to Resume.
+                 `)
         }
         lx = x
         ly = y
@@ -409,8 +416,11 @@
     animate();
     const togglePause = () => {
         pause = !pause
-        document.getElementById("PAUSE").className = `p-2 ${pause ? 'bg-gray-200 text-black py-2 rounded-sm' : 'bg-blue-500 text-white py-2 rounded-sm'}`;
+        const button = document.getElementById("PAUSE")
+        button.className = `p-2 ${pause ? 'bg-gray-200 text-black py-2 rounded-sm' : 'bg-blue-500 text-white py-2 rounded-sm'}`;
+        button.innerText = pause ? 'PAUSE': 'RESUME'
         if (!pause) requestAnimationFrame(animate);
+        messageBox()
     }
     function handleKeyDown(event) {
         if (event.keyCode === 37) {
@@ -468,7 +478,16 @@
         document.getElementById('leftArrow').addEventListener("touchend", rotateThrustOff);
         document.getElementById('upArrow').addEventListener("touchend", thrustOff);
         document.getElementById('rightArrow').addEventListener("touchend", rotateThrustOff);
+        document.getElementById('messageBox').addEventListener("click", togglePause)
     })
 
-
+    function messageBox(msg = '') {
+        const mb = document.getElementById('messageBox')
+        if (!msg) {
+            mb.hidden = true
+            return    
+        }
+        mb.innerText = msg
+        mb.hidden = false
+    }
 })();
