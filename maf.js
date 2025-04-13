@@ -338,10 +338,12 @@
             radius -= 9
             points += 1
         }
-        if (distance(position[0] + x, position[1] + y) < 10) {
+        if (distance(position[0] + x, position[1] + y) < 25) {
             fuel += 800
             pause = true
+            document.getElementById("PAUSE").innerText = 'RESUME'
             document.getElementById("PAUSE").className = `p-2 ${pause ? 'bg-gray-200 text-black py-2 rounded-sm' : 'bg-blue-500 text-white py-2 rounded-sm'}`;
+
             messageBox(`You have anticipated the position of the newest, smallest 
                 and most powerful circle. Due to your skilled (or lucky) ship placement,
                 800 kg of fuel has been transferred on board.
