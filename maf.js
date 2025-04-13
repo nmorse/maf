@@ -418,7 +418,7 @@
         pause = !pause
         const button = document.getElementById("PAUSE")
         button.className = `p-2 ${pause ? 'bg-gray-200 text-black py-2 rounded-sm' : 'bg-blue-500 text-white py-2 rounded-sm'}`;
-        button.innerText = pause ? 'PAUSE': 'RESUME'
+        button.innerText = pause ? 'RESUME' : 'PAUSE'
         if (!pause) requestAnimationFrame(animate);
         messageBox()
     }
