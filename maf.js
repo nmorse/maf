@@ -45,7 +45,7 @@
         repelForce = [0, 0]
 
         // Initialize the wormhole (circles)
-        lx = null 
+        lx = null
         ly = null
         queue.clear()
         for (let i = 0; i < 18; i++) {
@@ -68,7 +68,7 @@
 
     init()
 
-    const distance = (dx, dy) => Math.sqrt(dx*dx + dy*dy)
+    const distance = (dx, dy) => Math.sqrt(dx * dx + dy * dy)
 
     function drawScene(deltaT, elapsedT) {
         ctx.save();
@@ -190,7 +190,7 @@
             if (Math.abs(thrust) > 0.000001) {
                 ctx.beginPath();
                 ctx.moveTo(r3, 15);
-                ctx.lineTo(0 + r2 + r3*2, 30 * r1);
+                ctx.lineTo(0 + r2 + r3 * 2, 30 * r1);
                 ctx.stroke();
             }
         }
@@ -198,7 +198,7 @@
 
         // heads up display
         ctx.save()
-        ctx.translate(spaceCanvas.width/2, spaceCanvas.height - 35)
+        ctx.translate(spaceCanvas.width / 2, spaceCanvas.height - 35)
         ctx.rotate(rotationAngle);
         ctx.beginPath();
         ctx.strokeStyle = `rgb(250, 255, 200)`
@@ -218,16 +218,23 @@
                 y = (y / d) * 175
             }
             ctx.strokeStyle = circle.color
-            ctx.lineTo(x/5, y/5);
+            ctx.lineTo(x / 5, y / 5);
             ctx.stroke()
             circle = queue.nextItem()
         }
         ctx.strokeStyle = `rgb(250, 255, 200)`
         ctx.beginPath();
         ctx.arc(0, 0, 30, 0, Math.PI * 2, true)
+        ctx.stroke()
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(255, 40, 40, 1)`
+        ctx.moveTo(0, 0);
+        ctx.lineTo(repelForce[0] * -5000, repelForce[1] * -5000);
+        ctx.stroke()
+        ctx.beginPath();
         ctx.strokeStyle = `rgb(250, 250, 200)`
         ctx.moveTo(0, 0);
-        ctx.lineTo(rate[0]*-10, rate[1]*-10);
+        ctx.lineTo(rate[0] * -10, rate[1] * -10);
         ctx.stroke()
         ctx.restore();
     }
@@ -301,7 +308,7 @@
             // console.log(rotationThrust, thrust)
             fuel = fuel - Math.abs(thrust * 100) - Math.abs(rotationThrust * 100)
             rate = [rate[0] + Math.sin(rotationAngle) * thrust,
-            rate[1] + Math.cos(rotationAngle) * thrust]
+                    rate[1] + Math.cos(rotationAngle) * thrust]
             rate = [rate[0] + repelForce[0], rate[1] + repelForce[1]]
         }
         position = [position[0] + rate[0], position[1] + rate[1]]
@@ -487,7 +494,7 @@
         const mb = document.getElementById('messageBox')
         if (!msg) {
             mb.hidden = true
-            return    
+            return
         }
         mb.innerText = msg
         mb.hidden = false
