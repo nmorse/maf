@@ -2,6 +2,7 @@
     // …
     let pause = false
     const spaceCanvas = document.getElementById("spaceCanvas");
+    const scoreBoard = document.getElementById("score")
     const ctx = spaceCanvas.getContext('2d');
     const circles = [];
     const W = 800
@@ -138,25 +139,25 @@
 
         ctx.lineTo(6, 10);
 
-        // rotation nozzle rb
+        // rotation nozzle rt
         ctx.lineTo(10, 10);
         ctx.lineTo(6, 10);
         ctx.lineTo(10, 6);
         ctx.lineTo(10, -6);
 
-        // rotation nozzle rt
+        // rotation nozzle rb
         ctx.lineTo(6, -10);
         ctx.lineTo(10, -10);
         ctx.lineTo(6, -10);
         ctx.lineTo(-6, -10);
 
-        // rotation nozzle lt
+        // rotation nozzle lb
         ctx.lineTo(-10, -10);
         ctx.lineTo(-6, -10);
         ctx.lineTo(-10, -6);
         ctx.lineTo(-10, 6);
 
-        // rotation nozzle rt
+        // rotation nozzle lt
         ctx.lineTo(-6, 10);
         ctx.lineTo(-10, 10);
         ctx.lineTo(-6, 10);
@@ -381,7 +382,6 @@
             new_circle()
             previousTimeStamp = timeStamp;
             // console.log(position, rotationAngle)
-            const scoreBoard = document.getElementById("score")
             scoreBoard.innerText = Math.round(fuel) + ""
         }
         requestAnimationFrame(animate);
