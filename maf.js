@@ -71,7 +71,7 @@
 
     const distance = (dx, dy) => Math.sqrt(dx * dx + dy * dy)
 
-    function drawScene(deltaT, elapsedT) {
+    function drawScene(deltaT) {
         ctx.save();
         ctx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
         ctx.translate(spaceCanvas.width / 2, spaceCanvas.height / 2); // translate to center
@@ -293,7 +293,7 @@
 
     const rotationalStabilizerSystem = createPDController(0.1, 0.05);
 
-    function updateState(deltaT, elapsedT) {
+    function updateState(deltaT) {
         if (stabilize && rotationRate) {
             const error = -rotationRate
             const pidrRotationThrust = rotationalStabilizerSystem(error, deltaT / 1000)
@@ -313,7 +313,7 @@
             rate = [rate[0] + repelForce[0], rate[1] + repelForce[1]]
         }
         position = [position[0] + rate[0], position[1] + rate[1]]
-        drawScene(deltaT, elapsedT);
+        drawScene(deltaT);
     }
 
     const new_circle = () => {
@@ -373,12 +373,10 @@
         if (start === undefined) {
             start = timeStamp;
         }
-        const elapsed = timeStamp - start;
 
-        updateState(deltaT, elapsed);
+        updateState(deltaT);
         // frames++
         if (deltaT > 2000) { // (frames % 80 === 0) { 
-            // console.log("deltaT, elapsed", deltaT, elapsed);
             new_circle()
             previousTimeStamp = timeStamp;
             // console.log(position, rotationAngle)
@@ -409,7 +407,6 @@
                 console.log("!(viewportWidthRatio < viewportHeightRatio) Math.floor(W * viewportHeightRatio), viewportHeight", Math.floor(spaceCanvas.width * viewportHeightRatio), viewportHeight)
                 changeCanvasSize(Math.floor(W * viewportHeightRatio), viewportHeight);
             }
-            drawScene();
         }
     }
 
@@ -421,7 +418,6 @@
     }
 
     handleResize()
-    drawScene();
     animate();
     const togglePause = () => {
         pause = !pause
