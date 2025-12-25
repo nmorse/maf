@@ -354,7 +354,9 @@
 
             messageBox(`You have anticipated the position of the newest, smallest 
                 and most powerful circle. Due to your skilled (or lucky) ship placement,
-                800 kg of fuel has been transferred on board.
+                800 kg of fuel has been transferred on board. 
+                (note: Fuel levels greater than 6000 kg risks the chance of explosion.)
+                
                 click to Resume.
                  `)
         }
