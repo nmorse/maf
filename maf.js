@@ -241,7 +241,7 @@
     }
 
     function thrustOn(e) {
-        e.preventDefault();
+        // e.preventDefault();
         thrust = 0.01
     }
     function thrustOff(e) {
@@ -255,7 +255,7 @@
     }
 
     function rotateClockwiseThrustOn(e) {
-        e.preventDefault();
+        // e.preventDefault();
         rotationThrust = -ROT_THRUST
         isRotationThrustOff = false
     }
@@ -265,7 +265,7 @@
         isRotationThrustOff = true
     }
     function rotateCounterClockwiseThrustOn(e) {
-        e.preventDefault();
+        // e.preventDefault();
         rotationThrust = ROT_THRUST
         isRotationThrustOff = false
     }
