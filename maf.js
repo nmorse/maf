@@ -293,7 +293,7 @@
 
     const rotationalStabilizerSystem = createPDController(0.1, 0.05);
 
-    function updateState(deltaT) {
+    function updateState(deltaT, frameDeltaT) {
         if (stabilize && rotationRate) {
             const error = -rotationRate
             const pidrRotationThrust = rotationalStabilizerSystem(error, deltaT / 1000)
@@ -303,13 +303,12 @@
             }
         }
         // go
-        if (fuel > 0) {
-            rotationRate += rotationThrust
+        if (fuel > 0 && frameDeltaT > 0.01) {
+            rotationRate += (rotationThrust * frameDeltaT)
             rotationAngle += rotationRate
-            // console.log(rotationThrust, thrust)
-            fuel = fuel - Math.abs(thrust * 100) - Math.abs(rotationThrust * 100)
-            rate = [rate[0] + Math.sin(rotationAngle) * thrust,
-                    rate[1] + Math.cos(rotationAngle) * thrust]
+            fuel = fuel - Math.abs(thrust * frameDeltaT * 100) - Math.abs(rotationThrust * frameDeltaT * 100)
+            rate = [rate[0] + Math.sin(rotationAngle) * thrust * frameDeltaT,
+                    rate[1] + Math.cos(rotationAngle) * thrust * frameDeltaT]
             rate = [rate[0] + repelForce[0], rate[1] + repelForce[1]]
         }
         position = [position[0] + rate[0], position[1] + rate[1]]
@@ -351,13 +350,13 @@
             pause = true
             document.getElementById("PAUSE").innerText = 'RESUME'
             document.getElementById("PAUSE").className = `p-2 ${pause ? 'bg-gray-200 text-black py-2 rounded-sm' : 'bg-blue-500 text-white py-2 rounded-sm'}`;
-
+            repulsitronGenRate = Math.max(20, repulsitronGenRate/1.6)
             messageBox(`You have anticipated the position of the newest, smallest 
                 and most powerful circle. Due to your skilled (or lucky) ship placement,
                 800 kg of fuel has been transferred on board. 
-                (note: Fuel levels greater than 6000 kg risks the chance of explosion.)
+                ${fuel > 6000 ? '(warning: Fuel levels greater than 6000 kg risks spontaneous explosion.)' : ''}
                 
-                click to Resume.
+                click to Resume.${repulsitronGenRate}
                  `)
         }
         lx = x
@@ -365,22 +364,25 @@
     }
 
     let frames = 0
-    let previousTimeStamp, start
+    let previousTimeStamp, previousCircleTimeStamp, start, repulsitronGenRate = 2000
     function animate(timeStamp) {
         if (pause) return
         if (previousTimeStamp === undefined) {
             previousTimeStamp = timeStamp;
+            previousCircleTimeStamp = timeStamp;
         }
-        const deltaT = timeStamp - previousTimeStamp;
+        const deltaT = (timeStamp - previousTimeStamp) / 16.67;
+        const circleDeltaT = timeStamp - previousCircleTimeStamp
         if (start === undefined) {
-            start = timeStamp;
+            start = timeStamp
         }
 
-        updateState(deltaT);
-        // frames++
-        if (deltaT > 2000) { // (frames % 80 === 0) { 
+        updateState(circleDeltaT, deltaT);
+        previousTimeStamp = timeStamp
+    
+        if (circleDeltaT > repulsitronGenRate) { 
+            previousCircleTimeStamp = timeStamp
             new_circle()
-            previousTimeStamp = timeStamp;
             // console.log(position, rotationAngle)
             scoreBoard.innerText = Math.round(fuel) + ""
         }
@@ -398,6 +400,7 @@
         const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
         const viewportWidthRatio = viewportWidth / W;
+
         const viewportHeightRatio = viewportHeight / H;
 
         if (viewportWidthRatio < 1.0 || viewportHeightRatio < 1.5) {
@@ -442,6 +445,10 @@
         if (event.keyCode === 40) {
             thrustOff(event)
         }
+        if (event.keyCode === 32) {
+            togglePause(event)
+        }
+        event.preventDefault();
     }
     function handleKeyUp(event) {
         if (event.keyCode === 37) {
@@ -456,6 +463,7 @@
         if (event.keyCode === 40) {
             thrustOff(event)
         }
+        event.preventDefault();
     }
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -479,13 +487,13 @@
         document.getElementById('upArrow').addEventListener("mouseout", thrustOff);
         document.getElementById('rightArrow').addEventListener("mouseout", rotateThrustOff);
 
-        document.getElementById('leftArrow').addEventListener("touchstart", rotateCounterClockwiseThrustOn);
-        document.getElementById('upArrow').addEventListener("touchstart", thrustOn);
-        document.getElementById('rightArrow').addEventListener("touchstart", rotateClockwiseThrustOn);
-        document.getElementById('leftArrow').addEventListener("touchend", rotateThrustOff);
-        document.getElementById('upArrow').addEventListener("touchend", thrustOff);
-        document.getElementById('rightArrow').addEventListener("touchend", rotateThrustOff);
-        document.getElementById('messageBox').addEventListener("click", togglePause)
+        document.getElementById('leftArrow').addEventListener("touchstart", rotateCounterClockwiseThrustOn, {'passive': true});
+        document.getElementById('upArrow').addEventListener("touchstart", thrustOn, {'passive': true});
+        document.getElementById('rightArrow').addEventListener("touchstart", rotateClockwiseThrustOn, {'passive': true});
+        document.getElementById('leftArrow').addEventListener("touchend", rotateThrustOff, {'passive': true});
+        document.getElementById('upArrow').addEventListener("touchend", thrustOff, {'passive': true});
+        document.getElementById('rightArrow').addEventListener("touchend", rotateThrustOff, {'passive': true});
+        document.getElementById('messageBox').addEventListener("click", togglePause, {'passive': true})
     })
 
     function messageBox(msg = '') {
