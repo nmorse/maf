@@ -1,0 +1,8 @@
+.no-select {
+  -webkit-user-select: none;   /* Safari */
+  -ms-user-select: none;       /* IE 10+ */
+  user-select: none;           /* Standard */
+
+  -webkit-touch-callout: none; /* iOS Safari (prevents copy menu) */
+  -webkit-tap-highlight-color: transparent; /* removes tap highlight */
+}

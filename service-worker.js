@@ -1,5 +1,5 @@
 const cacheName = "mafCache"
-const precachedResources = ["/", "/index.html", "/maf.js", "/cl.js", "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"];
+const precachedResources = ["/", "/index.html", "/style.css", "/maf.js", "/cl.js", "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"];
 
 
 async function precache() {

@@ -27,13 +27,14 @@
 
     const queue = CircularList(20);
     let repelForce = [0, 0]
-
+    let repulsitronGenRate = 2000
     const init = () => {
         pause = false
         stabilize = true
         isRotationThrustOff = true
         colorAngle = 180
         fuel = 3000
+        repulsitronGenRate = 2000
 
         // state variables
         rotationThrust = 0.0
@@ -312,6 +313,7 @@
             rate = [rate[0] + repelForce[0], rate[1] + repelForce[1]]
         }
         position = [position[0] + rate[0], position[1] + rate[1]]
+        repulsitronGenRate = Math.min(2000, repulsitronGenRate*1.001)
         drawScene(deltaT);
     }
 
@@ -350,7 +352,7 @@
             pause = true
             document.getElementById("PAUSE").innerText = 'RESUME'
             document.getElementById("PAUSE").className = `p-2 ${pause ? 'bg-gray-200 text-black py-2 rounded-sm' : 'bg-blue-500 text-white py-2 rounded-sm'}`;
-            repulsitronGenRate = Math.max(20, repulsitronGenRate/1.6)
+            repulsitronGenRate = Math.max(50, repulsitronGenRate*0.4)
             messageBox(`You have anticipated the position of the newest, smallest 
                 and most powerful circle. Due to your skilled (or lucky) ship placement,
                 800 kg of fuel has been transferred on board. 
@@ -364,7 +366,7 @@
     }
 
     let frames = 0
-    let previousTimeStamp, previousCircleTimeStamp, start, repulsitronGenRate = 2000
+    let previousTimeStamp, previousCircleTimeStamp, start
     function animate(timeStamp) {
         if (pause) return
         if (previousTimeStamp === undefined) {
