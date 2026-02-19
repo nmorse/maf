@@ -73,6 +73,7 @@
     const distance = (dx, dy) => Math.sqrt(dx * dx + dy * dy)
 
     function drawScene(deltaT) {
+        if (pause) return
         ctx.save();
         ctx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
         ctx.translate(spaceCanvas.width / 2, spaceCanvas.height / 2); // translate to center
@@ -103,7 +104,7 @@
 
         // render the wormhole
         let radius = 255 + (deltaT / 110)
-        // console.log(radius)
+        
         queue.resetIterate()
         let circle = queue.nextItem()
         ctx.globalCompositeOperation = "lighten" // "lighten" "difference"
@@ -252,7 +253,6 @@
     function setRotStabilize() {
         // e.preventDefault();
         stabilize = !stabilize
-        console.log("stabilize", stabilize)
     }
 
     function rotateClockwiseThrustOn(e) {
@@ -295,6 +295,7 @@
     const rotationalStabilizerSystem = createPDController(0.1, 0.05);
 
     function updateState(deltaT, frameDeltaT) {
+        if (pause) return
         if (stabilize && rotationRate) {
             const error = -rotationRate
             const pidrRotationThrust = rotationalStabilizerSystem(error, deltaT / 1000)
@@ -304,6 +305,7 @@
             }
         }
         // go
+        if (frameDeltaT > 2) frameDeltaT = 2 // prevent large jumps in state due to pauses
         if (fuel > 0 && frameDeltaT > 0.01) {
             rotationRate += (rotationThrust * frameDeltaT)
             rotationAngle += rotationRate
@@ -358,7 +360,7 @@
                 800 kg of fuel has been transferred on board. 
                 ${fuel > 6000 ? '(warning: Fuel levels greater than 6000 kg risks spontaneous explosion.)' : ''}
                 
-                click to Resume.${repulsitronGenRate}
+                click to Resume. ${repulsitronGenRate.toFixed(1)}
                  `)
         }
         lx = x

@@ -6,3 +6,12 @@
   -webkit-touch-callout: none; /* iOS Safari (prevents copy menu) */
   -webkit-tap-highlight-color: transparent; /* removes tap highlight */
 }
+
+body {
+    overflow-x: hidden;
+}
+body, html {
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+}
