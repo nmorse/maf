@@ -294,6 +294,29 @@
 
     const rotationalStabilizerSystem = createPDController(0.1, 0.05);
 
+    function calculateRepelForce(factor) {
+        queue.resetIterate()
+        let circle = queue.nextItem()
+        let radius = 180
+        let points = 1
+        repelForce = [0, 0]
+        const rf = 0.0008 * factor // repulse factor
+        while (circle) {
+            // console.log(radius)
+            if (distance(position[0] + circle.x, position[1] + circle.y) < radius) {
+                if (fuel <= fuelCap) {
+                    fuel = Math.min(fuel + points*factor*0.01, fuelCap)
+                }
+                repelForce = [
+                    repelForce[0] + (1 / radius) * rf * (position[0] + circle.x),
+                    repelForce[1] + (1 / radius) * rf * (position[1] + circle.y)]
+            }
+            circle = queue.nextItem()
+            radius -= 9
+            points += 1
+        }
+    }
+
     function updateState(deltaT, frameDeltaT) {
         if (pause) return
         if (stabilize && rotationRate) {
@@ -305,13 +328,14 @@
             }
         }
         // go
-        if (frameDeltaT > 2) frameDeltaT = 2 // prevent large jumps in state due to pauses
+        if (frameDeltaT > 1.2) frameDeltaT = 1.2 // prevent large jumps in state due to pauses
         if (fuel > 0 && frameDeltaT > 0.01) {
             rotationRate += (rotationThrust * frameDeltaT)
             rotationAngle += rotationRate
             fuel = fuel - Math.abs(thrust * frameDeltaT * 100) - Math.abs(rotationThrust * frameDeltaT * 100)
             rate = [rate[0] + Math.sin(rotationAngle) * thrust * frameDeltaT,
                     rate[1] + Math.cos(rotationAngle) * thrust * frameDeltaT]
+            calculateRepelForce(frameDeltaT)
             rate = [rate[0] + repelForce[0], rate[1] + repelForce[1]]
         }
         position = [position[0] + rate[0], position[1] + rate[1]]
@@ -328,27 +352,7 @@
             x,
             y,
         });
-
-        queue.resetIterate()
-        let circle = queue.nextItem()
-        let radius = 180
-        let points = 1
-        repelForce = [0, 0]
-        const rf = 0.0008 // repulse factor
-        while (circle) {
-            // console.log(radius)
-            if (distance(position[0] + circle.x, position[1] + circle.y) < radius) {
-                if (fuel <= fuelCap) {
-                    fuel = Math.min(fuel + points, fuelCap)
-                }
-                repelForce = [
-                    repelForce[0] + (1 / radius) * rf * (position[0] + circle.x),
-                    repelForce[1] + (1 / radius) * rf * (position[1] + circle.y)]
-            }
-            circle = queue.nextItem()
-            radius -= 9
-            points += 1
-        }
+        
         if (distance(position[0] + x, position[1] + y) < 25) {
             fuel += 800
             pause = true
